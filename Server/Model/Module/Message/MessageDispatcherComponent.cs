@@ -8,6 +8,6 @@ namespace ET
 	public class MessageDispatcherComponent : Entity
 	{
 		public static MessageDispatcherComponent Instace { get; set; }
-		public readonly Dictionary<ushort, List<IMHandler>> Handlers = new Dictionary<ushort, List<IMHandler>>();
+		public readonly Dictionary<uint, List<IMHandler>> Handlers = new Dictionary<uint, List<IMHandler>>();
 	}
 }

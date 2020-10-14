@@ -2,9 +2,9 @@
 {
 	public class MessageAttribute: BaseAttribute
 	{
-		public ushort Opcode { get; }
+		public uint Opcode { get; }
 
-		public MessageAttribute(ushort opcode)
+		public MessageAttribute(uint opcode)
 		{
 			this.Opcode = opcode;
 		}

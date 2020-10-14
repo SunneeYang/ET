@@ -1,11 +1,11 @@
-
+using ET;
 using System.Collections.Generic;
 namespace ET
 {
 /// <summary>
 /// 传送unit
 /// </summary>
-	[Message(InnerOpcode.M2M_TrasferUnitRequest)]
+	[Message(IMessageOpcode.M2M_TrasferUnitRequest)]
 	public partial class M2M_TrasferUnitRequest: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -16,7 +16,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.M2M_TrasferUnitResponse)]
+	[Message(IMessageOpcode.M2M_TrasferUnitResponse)]
 	public partial class M2M_TrasferUnitResponse: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -29,7 +29,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.M2A_Reload)]
+	[Message(IMessageOpcode.M2A_Reload)]
 	public partial class M2A_Reload: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -38,7 +38,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.A2M_Reload)]
+	[Message(IMessageOpcode.A2M_Reload)]
 	public partial class A2M_Reload: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -49,7 +49,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.G2G_LockRequest)]
+	[Message(IMessageOpcode.G2G_LockRequest)]
 	public partial class G2G_LockRequest: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -62,7 +62,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.G2G_LockResponse)]
+	[Message(IMessageOpcode.G2G_LockResponse)]
 	public partial class G2G_LockResponse: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -73,7 +73,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.G2G_LockReleaseRequest)]
+	[Message(IMessageOpcode.G2G_LockReleaseRequest)]
 	public partial class G2G_LockReleaseRequest: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -86,7 +86,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.G2G_LockReleaseResponse)]
+	[Message(IMessageOpcode.G2G_LockReleaseResponse)]
 	public partial class G2G_LockReleaseResponse: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -97,7 +97,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.ObjectAddRequest)]
+	[Message(IMessageOpcode.ObjectAddRequest)]
 	public partial class ObjectAddRequest: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -110,7 +110,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.ObjectAddResponse)]
+	[Message(IMessageOpcode.ObjectAddResponse)]
 	public partial class ObjectAddResponse: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -121,7 +121,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.ObjectLockRequest)]
+	[Message(IMessageOpcode.ObjectLockRequest)]
 	public partial class ObjectLockRequest: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -136,7 +136,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.ObjectLockResponse)]
+	[Message(IMessageOpcode.ObjectLockResponse)]
 	public partial class ObjectLockResponse: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -147,7 +147,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.ObjectUnLockRequest)]
+	[Message(IMessageOpcode.ObjectUnLockRequest)]
 	public partial class ObjectUnLockRequest: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -162,7 +162,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.ObjectUnLockResponse)]
+	[Message(IMessageOpcode.ObjectUnLockResponse)]
 	public partial class ObjectUnLockResponse: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -173,7 +173,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.ObjectRemoveRequest)]
+	[Message(IMessageOpcode.ObjectRemoveRequest)]
 	public partial class ObjectRemoveRequest: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -184,7 +184,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.ObjectRemoveResponse)]
+	[Message(IMessageOpcode.ObjectRemoveResponse)]
 	public partial class ObjectRemoveResponse: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -195,7 +195,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.ObjectGetRequest)]
+	[Message(IMessageOpcode.ObjectGetRequest)]
 	public partial class ObjectGetRequest: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -206,7 +206,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.ObjectGetResponse)]
+	[Message(IMessageOpcode.ObjectGetResponse)]
 	public partial class ObjectGetResponse: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -219,7 +219,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.R2G_GetLoginKey)]
+	[Message(IMessageOpcode.R2G_GetLoginKey)]
 	public partial class R2G_GetLoginKey: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -230,7 +230,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.G2R_GetLoginKey)]
+	[Message(IMessageOpcode.G2R_GetLoginKey)]
 	public partial class G2R_GetLoginKey: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -245,7 +245,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.G2M_CreateUnit)]
+	[Message(IMessageOpcode.G2M_CreateUnit)]
 	public partial class G2M_CreateUnit: IActorRequest
 	{
 		public int RpcId { get; set; }
@@ -258,7 +258,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.M2G_CreateUnit)]
+	[Message(IMessageOpcode.M2G_CreateUnit)]
 	public partial class M2G_CreateUnit: IActorResponse
 	{
 		public int RpcId { get; set; }
@@ -277,7 +277,7 @@ namespace ET
 
 	}
 
-	[Message(InnerOpcode.G2M_SessionDisconnect)]
+	[Message(IMessageOpcode.G2M_SessionDisconnect)]
 	public partial class G2M_SessionDisconnect: IActorLocationMessage
 	{
 		public int RpcId { get; set; }

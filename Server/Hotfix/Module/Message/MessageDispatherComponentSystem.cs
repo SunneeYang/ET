@@ -51,7 +51,7 @@ namespace ET
 				}
 
 				Type messageType = iMHandler.GetMessageType();
-				ushort opcode = OpcodeTypeComponent.Instance.GetOpcode(messageType);
+				uint opcode = OpcodeTypeComponent.Instance.GetOpcode(messageType);
 				if (opcode == 0)
 				{
 					Log.Error($"消息opcode为0: {messageType.Name}");
@@ -61,7 +61,7 @@ namespace ET
 			}
 		}
 
-		public static void RegisterHandler(this MessageDispatcherComponent self, ushort opcode, IMHandler handler)
+		public static void RegisterHandler(this MessageDispatcherComponent self, uint opcode, IMHandler handler)
 		{
 			if (!self.Handlers.ContainsKey(opcode))
 			{

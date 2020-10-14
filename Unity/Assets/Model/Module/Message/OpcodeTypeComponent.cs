@@ -35,9 +35,9 @@ namespace ET
 	{
 		public static OpcodeTypeComponent Instance;
 		
-		private readonly DoubleMap<ushort, Type> opcodeTypes = new DoubleMap<ushort, Type>();
+		private readonly DoubleMap<uint, Type> opcodeTypes = new DoubleMap<uint, Type>();
 		
-		private readonly Dictionary<ushort, object> typeMessages = new Dictionary<ushort, object>();
+		private readonly Dictionary<uint, object> typeMessages = new Dictionary<uint, object>();
 
 		public void Load()
 		{
@@ -64,18 +64,18 @@ namespace ET
 			}
 		}
 
-		public ushort GetOpcode(Type type)
+		public uint GetOpcode(Type type)
 		{
 			return this.opcodeTypes.GetKeyByValue(type);
 		}
 
-		public Type GetType(ushort opcode)
+		public Type GetType(uint opcode)
 		{
 			return this.opcodeTypes.GetValueByKey(opcode);
 		}
 		
 		// 客户端为了0GC需要消息池，服务端消息需要跨协程不需要消息池
-		public object GetInstance(ushort opcode)
+		public object GetInstance(uint opcode)
 		{
 #if SERVER
 			Type type = this.GetType(opcode);

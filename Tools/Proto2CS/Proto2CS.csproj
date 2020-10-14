@@ -19,6 +19,9 @@
 
     <ItemGroup>
       <Compile Remove=".vs\**" />
+      <Compile Include="..\..\Server\Model\Base\Helper\CrcHelper.cs">
+        <Link>CrcHelper.cs</Link>
+      </Compile>
       <Compile Include="..\..\Unity\Assets\Model\Base\ProcessHelper.cs">
         <Link>ProcessHelper.cs</Link>
       </Compile>

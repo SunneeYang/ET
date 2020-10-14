@@ -245,12 +245,12 @@ namespace ET
 
 		public void Send(IMessage message)
 		{
-			ushort opcode = OpcodeTypeComponent.Instance.GetOpcode(message.GetType());
+			uint opcode = OpcodeTypeComponent.Instance.GetOpcode(message.GetType());
 			
 			Send(opcode, message);
 		}
 		
-		public void Send(ushort opcode, object message)
+		public void Send(uint opcode, object message)
 		{
 			if (this.IsDisposed)
 			{

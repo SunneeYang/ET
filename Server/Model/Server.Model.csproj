@@ -185,12 +185,27 @@
     <Compile Include="..\..\Unity\Assets\Model\Module\Message\Network\WebSocket\WService.cs">
       <Link>Module\Message\Network\WebSocket\WService.cs</Link>
     </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Proto\OMessage.cs">
+      <Link>Proto\OMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Proto\OMessageOpcode.cs">
+      <Link>Proto\OMessageOpcode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Proto\OMLogin.cs">
+      <Link>Proto\OMLogin.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Proto\OMLoginOpcode.cs">
+      <Link>Proto\OMLoginOpcode.cs</Link>
+    </Compile>
     <EmbeddedResource Remove="Libs\**" />
     <None Remove="Libs\**" />
     <None Remove="graph.bytes" />
     <Compile Remove="Module\Scene\**" />
     <EmbeddedResource Remove="Module\Scene\**" />
     <None Remove="Module\Scene\**" />
+    <Compile Remove="Proto\AutoGen\**" />
+    <EmbeddedResource Remove="Proto\AutoGen\**" />
+    <None Remove="Proto\AutoGen\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Unity\Assets\Model\Base\DoubleMap.cs" Link="Base\DoubleMap.cs" />
@@ -240,8 +255,6 @@
     <Compile Include="..\..\Unity\Assets\Model\Module\Message\Opcode.cs" Link="Module\Message\Opcode.cs" />
     <Compile Include="..\..\Unity\Assets\Model\Module\Message\OpcodeHelper.cs" Link="Module\Message\OpcodeHelper.cs" />
     <Compile Include="..\..\Unity\Assets\Model\Module\Message\OpcodeTypeComponent.cs" Link="Module\Message\OpcodeTypeComponent.cs" />
-    <Compile Include="..\..\Unity\Assets\Model\Module\Message\OuterMessage.cs" Link="Module\Message\OuterMessage.cs" />
-    <Compile Include="..\..\Unity\Assets\Model\Module\Message\OuterOpcode.cs" Link="Module\Message\OuterOpcode.cs" />
     <Compile Include="..\..\Unity\Assets\Model\Module\Message\ProtobufHelper.cs" Link="Module\Message\ProtobufHelper.cs" />
     <Compile Include="..\..\Unity\Assets\Model\Module\Message\ProtobufPacker.cs" Link="Module\Message\ProtobufPacker.cs" />
     <Compile Include="..\..\Unity\Assets\Model\Module\Message\RpcException.cs" Link="Module\Message\RpcException.cs" />
@@ -283,6 +296,7 @@
     <Folder Include="Module\Message\Network\KCP\" />
     <Folder Include="Module\Message\Network\TCP\" />
     <Folder Include="Module\Message\MessagePool\" />
+    <Folder Include="Proto\Inner\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Pathfinding.Ionic.Zip.Reduced, Version=1.9.1.9000, Culture=neutral, PublicKeyToken=null">

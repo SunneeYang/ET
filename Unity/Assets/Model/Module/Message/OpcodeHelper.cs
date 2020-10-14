@@ -4,13 +4,13 @@ namespace ET
 {
 	public static class OpcodeHelper
 	{
-		private static readonly HashSet<ushort> ignoreDebugLogMessageSet = new HashSet<ushort>
+		private static readonly HashSet<uint> ignoreDebugLogMessageSet = new HashSet<uint>
 		{
-			OuterOpcode.C2R_Ping,
-			OuterOpcode.R2C_Ping,
+			OMessageOpcode.C2R_Ping,
+			OMessageOpcode.R2C_Ping,
 		};
 
-		public static bool IsNeedDebugLogMessage(ushort opcode)
+		public static bool IsNeedDebugLogMessage(uint opcode)
 		{
 			if (ignoreDebugLogMessageSet.Contains(opcode))
 			{
@@ -20,9 +20,9 @@ namespace ET
 			return true;
 		}
 
-		public static bool IsClientHotfixMessage(ushort opcode)
+		public static bool IsClientHotfixMessage(uint opcode)
 		{
-			return opcode > 10000;
+			return false;	// todo 客户端会用，考虑怎么区分
 		}
 	}
 }

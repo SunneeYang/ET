@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using ETModel;
+using ET;
 
 namespace ETTools
 {
     internal class OpcodeInfo
     {
         public string Name;
-        public int Opcode;
+        public uint Opcode;
     }
 
     public static class Program
     {
+        
+        private const string clientMessagePath = "../Unity/Assets/Model/Proto/";
+        private const string serverMessagePath = "../Server/Model/Proto/";
+        
         public static void Main()
         {
             string protoc = "";
@@ -27,122 +31,143 @@ namespace ETTools
             {
                 protoc = "protoc";
             }
-            ProcessHelper.Run(protoc, "--csharp_out=\"../Unity/Assets/Model/Module/Message/\" --proto_path=\"./\" OuterMessage.proto", waitExit: true);
-
-            // InnerMessage.proto生成cs代码
-            InnerProto2CS.Proto2CS(); 
-
-            Proto2CS("ETModel", "OuterMessage.proto", clientMessagePath, "OuterOpcode", 100);
             
+            // 遍历所有文件
+            DirectoryInfo fdir = new DirectoryInfo(".");
+            FileInfo[] file = fdir.GetFiles();
+            if (file.Length != 0) //当前目录文件或文件夹不为空                   
+            {
+                foreach (FileInfo f in file) //显示当前目录所有文件   
+                {
+                    if (f.Extension.ToLower().Equals(".proto"))
+                    {
+                        string protoType = f.Name.Substring(0, 2);
+                        string opcodeFileName = f.Name.Substring(0, f.Name.Length - 6) + "Opcode";
+
+                        switch (protoType)
+                        {
+                            case "OM":
+                                ProcessHelper.Run(protoc, $"--csharp_out=\"{clientMessagePath}\" --proto_path=\"./\" {f.Name}", waitExit: true);
+                                OuterProto2CS.Proto2CS("ET", f.Name, clientMessagePath, opcodeFileName);
+                                break;
+                            
+                            case "IM":
+                                InnerProto2CS.Proto2CS("ET", f.Name, serverMessagePath, opcodeFileName);
+                                break;
+                            
+                            default:
+                                throw new FileLoadException("proto文件名必须以OM或者IM开头");
+                        }
+                    }
+                }
+            }
+
             Console.WriteLine("proto2cs succeed!");
         }
 
-        private const string protoPath = ".";
-        private const string clientMessagePath = "../Unity/Assets/Model/Module/Message/";
-        private static readonly char[] splitChars = { ' ', '\t' };
-        private static readonly List<OpcodeInfo> msgOpcode = new List<OpcodeInfo>();
-
-        public static void Proto2CS(string ns, string protoName, string outputPath, string opcodeClassName, int startOpcode, bool isClient = true)
+        public static class OuterProto2CS
         {
-            msgOpcode.Clear();
-            string proto = Path.Combine(protoPath, protoName);
+            private const string protoPath = "./";
+            private static readonly char[] splitChars = { ' ', '\t' };
+            private static readonly List<OpcodeInfo> msgOpcode = new List<OpcodeInfo>();
 
-            string s = File.ReadAllText(proto);
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append("using ETModel;\n");
-            sb.Append($"namespace {ns}\n");
-            sb.Append("{\n");
-
-            bool isMsgStart = false;
-
-            foreach (string line in s.Split('\n'))
+            public static void Proto2CS(string ns, string protoName, string outputPath, string opcodeClassName)
             {
-                string newline = line.Trim();
+                msgOpcode.Clear();
+                string proto = Path.Combine(protoPath, protoName);
 
-                if (newline == "")
+                string s = File.ReadAllText(proto);
+
+                StringBuilder sb = new StringBuilder();
+                //sb.Append("using ET;\n");
+                sb.Append("\n");
+                sb.Append($"namespace {ns}\n");
+                sb.Append("{\n");
+
+                bool isMsgStart = false;
+
+                foreach (string line in s.Split('\n'))
                 {
-                    continue;
-                }
+                    string newline = line.Trim();
 
-                if (newline.StartsWith("//"))
-                {
-                    sb.Append($"{newline}\n");
-                }
-
-                if (newline.StartsWith("message"))
-                {
-                    string parentClass = "";
-                    isMsgStart = true;
-                    string msgName = newline.Split(splitChars, StringSplitOptions.RemoveEmptyEntries)[1];
-                    string[] ss = newline.Split(new[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (ss.Length == 2)
+                    if (newline == "")
                     {
-                        parentClass = ss[1].Trim();
-                    }
-                    else
-                    {
-                        parentClass = "";
+                        continue;
                     }
 
-                    msgOpcode.Add(new OpcodeInfo() { Name = msgName, Opcode = ++startOpcode });
-
-                    sb.Append($"\t[Message({opcodeClassName}.{msgName})]\n");
-                    sb.Append($"\tpublic partial class {msgName} ");
-                    if (parentClass != "")
+                    if (newline.StartsWith("//"))
                     {
-                        sb.Append($": {parentClass} ");
+                        sb.Append($"{newline}\n");
                     }
 
-                    sb.Append("{}\n\n");
+                    if (newline.StartsWith("message"))
+                    {
+                        string parentClass = "";
+                        isMsgStart = true;
+                        string msgName = newline.Split(splitChars, StringSplitOptions.RemoveEmptyEntries)[1];
+                        string[] ss = newline.Split(new[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
+
+                        if (ss.Length == 2)
+                        {
+                            parentClass = ss[1].Trim();
+                        }
+                        else
+                        {
+                            parentClass = "";
+                        }
+
+                        msgOpcode.Add(new OpcodeInfo() { Name = msgName, Opcode = msgName.Crc32Low() });
+
+                        sb.Append($"\t[Message({opcodeClassName}.{msgName})]\n");
+                        sb.Append($"\tpublic partial class {msgName} ");
+                        if (parentClass != "")
+                        {
+                            sb.Append($": {parentClass} ");
+                        }
+
+                        sb.Append("{}\n\n");
+                    }
+
+                    if (isMsgStart && newline == "}")
+                    {
+                        isMsgStart = false;
+                    }
                 }
 
-                if (isMsgStart && newline == "}")
-                {
-                    isMsgStart = false;
-                }
+                sb.Append("}\n");
+
+                GenerateOpcode(ns, opcodeClassName, outputPath, sb);
             }
 
-            sb.Append("}\n");
-
-            GenerateOpcode(ns, opcodeClassName, outputPath, sb);
-        }
-
-        private static void GenerateOpcode(string ns, string outputFileName, string outputPath, StringBuilder sb)
-        {
-            sb.AppendLine($"namespace {ns}");
-            sb.AppendLine("{");
-            sb.AppendLine($"\tpublic static partial class {outputFileName}");
-            sb.AppendLine("\t{");
-            foreach (OpcodeInfo info in msgOpcode)
+            private static void GenerateOpcode(string ns, string outputFileName, string outputPath, StringBuilder sb)
             {
-                sb.AppendLine($"\t\t public const ushort {info.Name} = {info.Opcode};");
+                sb.AppendLine($"namespace {ns}");
+                sb.AppendLine("{");
+                sb.AppendLine($"\tpublic static partial class {outputFileName}");
+                sb.AppendLine("\t{");
+                foreach (OpcodeInfo info in msgOpcode)
+                {
+                    sb.AppendLine($"\t\t public const uint {info.Name} = 0x{Convert.ToString(info.Opcode, 16)};");
+                }
+
+                sb.AppendLine("\t}");
+                sb.AppendLine("}");
+
+                string csPath = Path.Combine(outputPath, outputFileName + ".cs");
+                File.WriteAllText(csPath, sb.ToString());
             }
-
-            sb.AppendLine("\t}");
-            sb.AppendLine("}");
-
-            string csPath = Path.Combine(outputPath, outputFileName + ".cs");
-            File.WriteAllText(csPath, sb.ToString());
         }
+
+        
     }
 
     public static class InnerProto2CS
     {
         private const string protoPath = ".";
-        private const string serverMessagePath = "../Server/Model/Module/Message/";
         private static readonly char[] splitChars = { ' ', '\t' };
         private static readonly List<OpcodeInfo> msgOpcode = new List<OpcodeInfo>();
 
-        public static void Proto2CS()
-        {
-            msgOpcode.Clear();
-            Proto2CS("ETModel", "InnerMessage.proto", serverMessagePath, "InnerOpcode", 1000);
-            GenerateOpcode("ETModel", "InnerOpcode", serverMessagePath);
-        }
-
-        public static void Proto2CS(string ns, string protoName, string outputPath, string opcodeClassName, int startOpcode)
+        public static void Proto2CS(string ns, string protoName, string outputPath, string opcodeClassName)
         {
             msgOpcode.Clear();
             string proto = Path.Combine(protoPath, protoName);
@@ -151,7 +176,7 @@ namespace ETTools
             string s = File.ReadAllText(proto);
 
             StringBuilder sb = new StringBuilder();
-            sb.Append("using ETModel;\n");
+            sb.Append("using ET;\n");
             sb.Append("using System.Collections.Generic;\n");
             sb.Append($"namespace {ns}\n");
             sb.Append("{\n");
@@ -184,7 +209,7 @@ namespace ETTools
                         parentClass = ss[1].Trim();
                     }
 
-                    msgOpcode.Add(new OpcodeInfo() { Name = msgName, Opcode = ++startOpcode });
+                    msgOpcode.Add(new OpcodeInfo() { Name = msgName, Opcode = msgName.Crc32Low() });
 
                     sb.Append($"\t[Message({opcodeClassName}.{msgName})]\n");
                     sb.Append($"\tpublic partial class {msgName}");
@@ -243,6 +268,8 @@ namespace ETTools
             sb.Append("}\n");
 
             File.WriteAllText(csPath, sb.ToString());
+            
+            GenerateOpcode(ns, opcodeClassName, outputPath);
         }
 
         private static void GenerateOpcode(string ns, string outputFileName, string outputPath)
@@ -254,7 +281,7 @@ namespace ETTools
             sb.AppendLine("\t{");
             foreach (OpcodeInfo info in msgOpcode)
             {
-                sb.AppendLine($"\t\t public const ushort {info.Name} = {info.Opcode};");
+                sb.AppendLine($"\t\t public const uint {info.Name} = 0x{Convert.ToString(info.Opcode, 16)};");
             }
 
             sb.AppendLine("\t}");
