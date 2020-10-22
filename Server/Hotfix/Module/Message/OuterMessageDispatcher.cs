@@ -4,12 +4,12 @@ namespace ET
 {
 	public class OuterMessageDispatcher: IMessageDispatcher
 	{
-		public void Dispatch(Session session, ushort opcode, object message)
+		public void Dispatch(Session session, uint opcode, object message)
 		{
 			DispatchAsync(session, opcode, message).Coroutine();
 		}
 		
-		public async ETVoid DispatchAsync(Session session, ushort opcode, object message)
+		public async ETVoid DispatchAsync(Session session, uint opcode, object message)
 		{
 			// 根据消息接口判断是不是Actor消息，不同的接口做不同的处理
 			switch (message)

@@ -4,7 +4,7 @@ namespace ET
 {
     public class InnerMessageDispatcher: IMessageDispatcher
     {
-        public void Dispatch(Session session, ushort opcode, object message)
+        public void Dispatch(Session session, uint opcode, object message)
         {
             // 收到actor消息,放入actor队列
             switch (message)

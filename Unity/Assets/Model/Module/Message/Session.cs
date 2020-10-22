@@ -127,7 +127,7 @@ namespace ET
 		private void Run(MemoryStream memoryStream)
 		{
 			memoryStream.Seek(Packet.MessageIndex, SeekOrigin.Begin);
-			ushort opcode = BitConverter.ToUInt16(memoryStream.GetBuffer(), Packet.OpcodeIndex);
+			uint opcode = BitConverter.ToUInt16(memoryStream.GetBuffer(), Packet.OpcodeIndex);
 			
 #if !SERVER
 			if (OpcodeHelper.IsClientHotfixMessage(opcode))
@@ -160,7 +160,7 @@ namespace ET
 			RunMessage(opcode, message);
 		}
 
-		private void RunMessage(ushort opcode, object message)
+		private void RunMessage(uint opcode, object message)
 		{
 			this.LastRecvTime = TimeHelper.Now();
             

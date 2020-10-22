@@ -4,9 +4,9 @@ namespace ET
 {
 	public class ActorMessageAttribute : Attribute
 	{
-		public ushort Opcode { get; private set; }
+		public uint Opcode { get; private set; }
 
-		public ActorMessageAttribute(ushort opcode)
+		public ActorMessageAttribute(uint opcode)
 		{
 			this.Opcode = opcode;
 		}
